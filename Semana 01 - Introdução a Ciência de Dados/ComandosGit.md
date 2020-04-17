@@ -333,7 +333,6 @@ Fazendo o **rebase** entre um o branch bug-123 e o master.
 	git checkout experiment
 	
 	git rebase master
-	
 
 ###Stash
 
