@@ -18,4 +18,4 @@ C:\Users\TiagoDias\codenation\venv\lib\site-packages\_pytest\junitxml.py:417
 
 -- Docs: https://docs.pytest.org/en/latest/warnings.html
 - generated xml file: C:\Users\TiagoDias\codenation\data-science-1\output.xml -
-======================== 5 passed, 1 warning in 2.52s =========================
+======================== 5 passed, 1 warning in 2.57s =========================

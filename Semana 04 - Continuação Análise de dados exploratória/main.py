@@ -14,7 +14,7 @@
 
 # ## _Setup_ geral
 
-# In[180]:
+# In[1]:
 
 
 import pandas as pd
@@ -25,7 +25,7 @@ import seaborn as sns
 from statsmodels.distributions.empirical_distribution import ECDF
 
 
-# In[181]:
+# In[2]:
 
 
 #%matplotlib inline
@@ -42,7 +42,7 @@ sns.set()
 
 # ### _Setup_ da parte 1
 
-# In[182]:
+# In[3]:
 
 
 np.random.seed(42)
@@ -53,26 +53,26 @@ dataframe = pd.DataFrame({"normal": sct.norm.rvs(20, 4, size=10000),
 
 # ## Inicie sua análise a partir da parte 1 a partir daqui
 
-# In[183]:
+# In[4]:
 
 
 # Sua análise da parte 1 começa aqui.
 dataframe.head(2)
 
 
-# In[184]:
+# In[5]:
 
 
 dataframe.describe()
 
 
-# In[185]:
+# In[6]:
 
 
 dataframe.info()
 
 
-# In[213]:
+# In[7]:
 
 
 #Questão 1
@@ -90,6 +90,16 @@ dif = (q1_norm_binon, q2_norm_binon, q3_norm_binon)
 dif
 
 
+# In[21]:
+
+
+# Questão 1 (Performance)
+q_norm = np.quantile(dataframe['normal'], [0.25, 0.50, 0.75]) 
+q_binom = np.quantile(dataframe['binomial'], [0.25, 0.50, 0.75]) 
+dif_norm_binom = np.around(q_norm-q_binom, 3)
+tuple(dif_norm_binom)
+
+
 # In[187]:
 
 
@@ -100,7 +110,18 @@ dif2 = ECDF(dataframe['normal'])(media + desvio) - ECDF(dataframe['normal'])(med
 print(dif2)
 
 
-# In[189]:
+# In[24]:
+
+
+# Questão 2 (Performance)
+media = dataframe['normal'].mean()
+desvio = dataframe['normal'].std()
+probabilidade = ECDF(dataframe['normal'])
+dif_intervalo = probabilidade(media + desvio) - probabilidade(media - desvio)
+dif_intervalo
+
+
+# In[28]:
 
 
 #Questao 3
@@ -114,28 +135,30 @@ dif3 = (m, v)
 dif3
 
 
+# In[46]:
+
+
+# Questão 3 (Performance)
+norm = dataframe.normal.agg(['mean','var'])
+binom = dataframe.binomial.agg(['mean','var'])
+dif_med_var = np.around(binom-norm, 3)
+tuple(dif_med_var)
+
+
 # ## Questão 1
 # 
 # Qual a diferença entre os quartis (Q1, Q2 e Q3) das variáveis `normal` e `binomial` de `dataframe`? Responda como uma tupla de três elementos arredondados para três casas decimais.
 # 
 # Em outra palavras, sejam `q1_norm`, `q2_norm` e `q3_norm` os quantis da variável `normal` e `q1_binom`, `q2_binom` e `q3_binom` os quantis da variável `binom`, qual a diferença `(q1_norm - q1 binom, q2_norm - q2_binom, q3_norm - q3_binom)`?
 
-# In[190]:
+# In[22]:
 
 
 def q1():
-    df = (dataframe.describe())
-    q1_norm = (df.loc['25%'].values)[0]
-    q2_norm = (df.loc['50%'].values)[0]
-    q3_norm = (df.loc['75%'].values)[0]
-    q1_binom = (df.loc['25%'].values)[1]
-    q2_binom = (df.loc['50%'].values)[1]
-    q3_binom = (df.loc['75%'].values)[1]
-    q1_norm_binon = float("{0:.3f}".format(q1_norm - q1_binom))
-    q2_norm_binon = float("{0:.3f}".format(q2_norm - q2_binom))
-    q3_norm_binon = float("{0:.3f}".format(q3_norm - q3_binom))
-    dif = (q1_norm_binon, q2_norm_binon, q3_norm_binon)
-    return dif
+    q_norm = np.quantile(dataframe['normal'], [0.25, 0.50, 0.75]) 
+    q_binom = np.quantile(dataframe['binomial'], [0.25, 0.50, 0.75]) 
+    dif_norm_binom = np.around(q_norm-q_binom, 3)
+    return tuple(dif_norm_binom)
 
 
 # Para refletir:
@@ -154,9 +177,9 @@ def q1():
 def q2():
     media = dataframe['normal'].mean()
     desvio = dataframe['normal'].std()
-    dif2 = ECDF(dataframe['normal'])(media + desvio) - ECDF(dataframe['normal'])(media - desvio)
-    prob2 = float(np.around(dif2, decimals=3))
-    return prob2
+    probabilidade = ECDF(dataframe['normal'])
+    dif_intervalo = probabilidade(media + desvio) - probabilidade(media - desvio)
+    return float(dif_intervalo)
 
 
 # Para refletir:
@@ -174,14 +197,10 @@ def q2():
 
 
 def q3():
-    m_norm = dataframe['normal'].mean()
-    v_norm = dataframe['normal'].var()
-    m_binom = dataframe['binomial'].mean()
-    v_binom = dataframe['binomial'].var()
-    m = float("{0:.3f}".format(m_binom - m_norm))
-    v = float("{0:.3f}".format(v_binom - v_norm))
-    dif3 = (m, v)
-    return dif3
+    norm = dataframe.normal.agg(['mean','var'])
+    binom = dataframe.binomial.agg(['mean','var'])
+    dif_med_var = np.around(binom-norm, 3)
+    return tuple(dif_med_var)
 
 
 # Para refletir:
@@ -193,7 +212,7 @@ def q3():
 
 # ### _Setup_ da parte 2
 
-# In[193]:
+# In[49]:
 
 
 stars = pd.read_csv("pulsar_stars.csv")
@@ -217,7 +236,7 @@ stars.loc[:, "target"] = stars.target.astype(bool)
 stars.head(2)
 
 
-# In[244]:
+# In[50]:
 
 
 #Questão 4
@@ -225,6 +244,18 @@ stars.head(2)
 df4 = stars.query('target == False').mean_profile
 false_pulsar_mean_profile_standardized = (df4 - df4.mean()) / df4.std()
 print(tuple(np.around(ECDF(false_pulsar_mean_profile_standardized)(sct.norm.ppf([0.80, 0.90, 0.95])).round(3),decimals=3)))
+
+
+# In[61]:
+
+
+#Questão 4 (Performance)
+df4 = stars.query('target == False').mean_profile
+false_pulsar_mean_profile_standardized = (df4 - df4.mean()) / df4.std()
+cdf_emp = ECDF(false_pulsar_mean_profile_standardized)
+quantis_dist_norm = sct.norm.ppf([0.80, 0.90, 0.95])
+probabilidade_quantis = np.around(cdf_emp(quantis_dist_norm), 3)
+tuple(probabilidade_quantis)
 
 
 # In[243]:
@@ -237,6 +268,16 @@ Q2 = np.quantile(false_pulsar_mean_profile_standardized, .50) - sct.norm.ppf(.50
 Q3 = np.quantile(false_pulsar_mean_profile_standardized, .75) - sct.norm.ppf(.75)
 dif5 = np.around((Q1, Q2, Q3),decimals=3)
 print(dif5)
+
+
+# In[56]:
+
+
+#Questão 5 (Performance)
+quartis = np.quantile(false_pulsar_mean_profile_standardized, [.25,.50,.75])
+dist_norm = sct.norm.ppf([.25,.50,.75])
+dif_quartis_dist = np.around(quartis - dist_norm, 3)
+tuple(dif_quartis_dist)
 
 
 # ## Questão 4
@@ -256,10 +297,12 @@ print(dif5)
 
 
 def q4():
-    df4 = (stars.query('target == False')).mean_profile
+    df4 = stars.query('target == False').mean_profile
     false_pulsar_mean_profile_standardized = (df4 - df4.mean()) / df4.std()
-    q4 = tuple(np.around(ECDF(false_pulsar_mean_profile_standardized)(sct.norm.ppf([0.80, 0.90, 0.95])).round(3),decimals=3))
-    return q4
+    cdf_emp = ECDF(false_pulsar_mean_profile_standardized)
+    quantis_dist_norm = sct.norm.ppf([0.80, 0.90, 0.95])
+    probabilidade_quantis = np.around(cdf_emp(quantis_dist_norm), 3)
+    return tuple(probabilidade_quantis)
 
 
 # Para refletir:
@@ -275,11 +318,10 @@ def q4():
 
 
 def q5():
-    Q1 = np.quantile(false_pulsar_mean_profile_standardized, .25) - sct.norm.ppf(.25)
-    Q2 = np.quantile(false_pulsar_mean_profile_standardized, .50) - sct.norm.ppf(.50)
-    Q3 = np.quantile(false_pulsar_mean_profile_standardized, .75) - sct.norm.ppf(.75)
-    dif5 = tuple(np.around((Q1, Q2, Q3),decimals=3))
-    return dif5
+    quartis = np.quantile(false_pulsar_mean_profile_standardized, [.25,.50,.75])
+    dist_norm = sct.norm.ppf([.25,.50,.75])
+    dif_quartis_dist = np.around(quartis - dist_norm, 3)
+    return tuple(dif_quartis_dist)
 
 
 # Para refletir:
