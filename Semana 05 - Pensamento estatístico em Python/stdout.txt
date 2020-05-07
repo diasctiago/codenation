@@ -24,4 +24,4 @@ C:\Users\TiagoDias\codenation\venv\lib\site-packages\patsy\constraint.py:13
 
 -- Docs: https://docs.pytest.org/en/latest/warnings.html
 - generated xml file: C:\Users\TiagoDias\codenation\data-science-2\output.xml -
-======================== 7 passed, 2 warnings in 2.57s ========================
+======================== 7 passed, 2 warnings in 9.85s ========================

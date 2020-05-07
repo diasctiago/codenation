@@ -11,7 +11,7 @@
 
 # ## _Setup_ geral
 
-# In[2]:
+# In[1]:
 
 
 import pandas as pd
@@ -22,10 +22,10 @@ import statsmodels.api as sm
 import seaborn as sns
 
 
-# In[3]:
+# In[67]:
 
 
-# %matplotlib inline
+#%matplotlib inline
 
 from IPython.core.pylabtools import figsize
 
@@ -35,13 +35,13 @@ figsize(12, 8)
 sns.set()
 
 
-# In[4]:
+# In[2]:
 
 
 athletes = pd.read_csv("athletes.csv")
 
 
-# In[5]:
+# In[3]:
 
 
 def get_sample(df, col_name, n=100, seed=42):
@@ -77,38 +77,42 @@ def get_sample(df, col_name, n=100, seed=42):
 
 # ## Inicia sua análise a partir daqui
 
-# In[6]:
+# In[70]:
 
 
 # Sua análise começa aqui.
 athletes.shape
 
 
-# In[7]:
+# In[71]:
 
 
+# Uma breve exibição dos dados
 athletes.head(2)
 
 
-# In[8]:
+# In[72]:
 
 
+# Exibição de algumas informações do dataset como colunas e tipos de variáveis
 athletes.info()
 
 
-# In[9]:
+# In[73]:
 
 
+# Levantamemento da quantidade de variáveis nulas
 athletes.isna().sum()
 
 
-# In[10]:
+# In[74]:
 
 
+# Um breve resumo estatistico das colunas
 athletes.describe()
 
 
-# In[11]:
+# In[4]:
 
 
 # Selecionando a amostra de 3000 observações da coluna height
@@ -116,32 +120,41 @@ athletes.describe()
 height_3000 = get_sample(athletes, 'height', n=3000, seed=42)
 
 
-# In[12]:
+# In[76]:
 
 
-# sm.qqplot(height_3000, fit=True, line="45");
+# QQPLOT da amostra de 3000 observações da coluna height
+
+sm.qqplot(height_3000, fit=True, line="45");
 
 
-# In[13]:
+# In[77]:
 
 
-# sns.distplot(height_3000, bins=25);
+# Histograma da amostra de 3000 observações da coluna height
+
+sns.distplot(height_3000, bins=25);
 
 
-# In[14]:
+# In[78]:
 
+
+# Aplicação do Teste de Shapiro-Wilk na amostra de 3000 observações da coluna height
 
 sct.shapiro(height_3000)
 
 
-# In[15]:
+# In[79]:
 
 
 shapiro_stat, shapiro_pvalue = sct.shapiro(height_3000)
 
 
-# In[16]:
+# In[80]:
 
+
+# Resultado do Teste de Shapiro-Wilk na amostra de 3000 observações da coluna height
+# Comparando o seu resuldado com o alpha é possivel saber se a amostra tem uma distribuição normal
 
 if shapiro_pvalue > 0.05:
     print('Com 95% de confiança, os dados são similares a uma distribição normal')
@@ -149,20 +162,26 @@ else:
     print('Com 95% de confiança, os dados NÃO são similares a uma distribição normal')
 
 
-# In[17]:
+# In[13]:
 
+
+# Aplicação do Teste de Jarque–Bera tambem na amostra de 3000 observações da coluna height
 
 sct.jarque_bera(height_3000)
 
 
-# In[18]:
+# In[82]:
 
 
 jarque_stat, jarque_pvalue = sct.jarque_bera(height_3000)
 
 
-# In[19]:
+# In[83]:
 
+
+# Resultado do Teste de Jarque–Bera na amostra de 3000 observações da coluna height
+# Comparando o seu resuldado com o alpha é possivel saber se a amostra tem uma distribuição normal
+# Tanto Jarque–Bera quanto Shapiro-Wilk, comparando o p-valor com alpha podemos chegar nesta conclusão
 
 if jarque_pvalue > 0.05:
     print('Com 95% de confiança, os dados são similares a uma distribição normal')
@@ -170,7 +189,7 @@ else:
     print('Com 95% de confiança, os dados NÃO são similares a uma distribição normal')
 
 
-# In[20]:
+# In[5]:
 
 
 # Selecionando a amostra de 3000 observações da coluna weight
@@ -178,40 +197,49 @@ else:
 weight_3000 = get_sample(athletes, 'weight', n=3000, seed=42)
 
 
-# In[21]:
+# In[85]:
 
 
-# sm.qqplot(weight_3000, fit=True, line="45");
+# QQPLOT da amostra de 3000 observações da coluna weight
+
+sm.qqplot(weight_3000, fit=True, line="45");
 
 
-# In[22]:
+# In[86]:
 
 
-# sns.distplot(weight_3000, bins=25);
+# Histograma da amostra de 3000 observações da coluna weight
+
+sns.distplot(weight_3000, bins=25);
 
 
-# In[23]:
+# In[9]:
 
+
+# Aplicação do Normal Test na amostra de 3000 observações da coluna weight
 
 sct.normaltest(weight_3000)
 
 
-# In[24]:
+# In[10]:
 
 
-normal_stat, normal_pvalue = sct.normaltest(weight_3000)
+normaltest_weight_3000 = sct.normaltest(weight_3000)
 
 
-# In[25]:
+# In[11]:
 
 
-if normal_pvalue > 0.05:
+# Resultado do Normal Test na amostra de 3000 observações da coluna weight
+# Comparando o seu resuldado com o alpha é possivel saber se a amostra tem uma distribuição normal
+
+if normaltest_weight_3000.pvalue > 0.05:
     print('Com 95% de confiança, os dados são similares a uma distribição normal')
 else:
     print('Com 95% de confiança, os dados NÃO são similares a uma distribição normal')
 
 
-# In[26]:
+# In[15]:
 
 
 # transformação logarítmica da amostra de 3000 observações da coluna weight
@@ -219,40 +247,50 @@ else:
 weight_3000_log = np.log(weight_3000)
 
 
-# In[27]:
+# In[91]:
 
 
-# sm.qqplot(weight_3000_log, fit=True, line="45");
+# QQPLOT da amostra de 3000 observações da coluna weight após a transformação logarítmica
+
+sm.qqplot(weight_3000_log, fit=True, line="45");
 
 
-# In[28]:
+# In[92]:
 
 
-# sns.distplot(weight_3000_log, bins=25);
+# Histograma da amostra de 3000 observações da coluna weight após a transformação logarítmica
+
+sns.distplot(weight_3000_log, bins=25);
 
 
-# In[29]:
+# In[93]:
 
+
+# Aplicação do Normal Test na amostra de 3000 observações da coluna weight após a transformação logarítmica
 
 sct.normaltest(weight_3000_log)
 
 
-# In[30]:
+# In[16]:
 
 
-normal_stat_log, normal_pvalue_log = sct.normaltest(weight_3000_log)
+normaltest_weight_3000_log = sct.normaltest(weight_3000_log)
 
 
-# In[31]:
+# In[17]:
 
 
-if normal_pvalue_log > 0.05:
+# Resultado do Normal Test na amostra de 3000 observações da coluna weight após a transformação logarítmica
+# Comparando o seu resuldado com o alpha é possivel saber se a amostra tem uma distribuição normal
+# Em alguns casos a transformação logarítmica pode levar a uma distribuição normal
+
+if normaltest_weight_3000_log.pvalue > 0.05:
     print('Com 95% de confiança, os dados são similares a uma distribição normal')
 else:
     print('Com 95% de confiança, os dados NÃO são similares a uma distribição normal')
 
 
-# In[32]:
+# In[19]:
 
 
 # Filtrando todos atletas brasileiros, norte-americanos e canadenses as observações da coluna height
@@ -262,121 +300,122 @@ height_can = athletes.query('nationality in "CAN"')['height'].dropna()
 height_usa = athletes.query('nationality in "USA"')['height'].dropna()
 
 
-# In[33]:
+# In[97]:
 
 
-"""
+# QQPLOT do atletas brasileiros, norte-americanos e canadenses para as observações da coluna height
+
 bra = sm.qqplot(height_bra, fit=True, line="45")
 can = sm.qqplot(height_can, fit=True, line="45")
 usa = sm.qqplot(height_usa, fit=True, line="45")
-"""
 
 
-# In[34]:
+# In[98]:
 
 
-"""
+# Histograma do atletas brasileiros, norte-americanos e canadenses para as observações da coluna height
+
 sns.distplot(height_bra, bins=25, hist=False)
 sns.distplot(height_can, bins=25, hist=False)
 sns.distplot(height_usa, bins=25, hist=False)
 plt.show()
-"""
 
 
-# In[35]:
+# In[99]:
 
+
+# Verificando a média da coluna height para cada pais
 
 print('A média de altura do Brasil:', height_bra.mean().round(3))
 print('A média de altura do EUA:', height_usa.mean().round(3))
 print('A média de altura do Canada:', height_can.mean().round(3))
 
 
-# In[60]:
+# In[21]:
 
+
+# Aplicação do teste ttest_ind, que compara dois grupos ( BRASIL e EUA) para identificar semelhanças estatísticas
+# Comparando o resultado com o alpha é possivel saber se a amostra tem uma semelhanças estatísticas
 
 sct.ttest_ind(height_bra, height_usa, equal_var=False)
 
 
-# In[61]:
+# In[23]:
 
 
-ttest_stat1, ttest_pvalue1 = sct.ttest_ind(height_bra, height_usa, equal_var=False)
+test_bra_usa = sct.ttest_ind(height_bra, height_usa, equal_var=False)
 
 
-# In[62]:
+# In[24]:
 
 
-if ttest_pvalue1 > 0.05:
+if test_bra_usa.pvalue > 0.05:
     print('Com 95% de confiança, as médias das alturas de Brasil e EUA são estatisticamente iguais')
 else:
     print('Com 95% de confiança, as médias das alturas de Brasil e EUA NÃO são estatisticamente iguais')
 
 
-# In[63]:
+# In[103]:
 
+
+# Aplicação do teste ttest_ind, que compara dois grupos ( BRASIL e CANADA) para identificar semelhanças estatísticas
+# Comparando o resultado com o alpha é possivel saber se a amostra tem uma semelhanças estatísticas
 
 sct.ttest_ind(height_bra, height_can, equal_var=False)
 
 
-# In[64]:
+# In[25]:
 
 
-ttest_stat2, ttest_pvalue2 = sct.ttest_ind(height_bra, height_can, equal_var=False)
+test_bra_can = sct.ttest_ind(height_bra, height_can, equal_var=False)
 
 
-# In[65]:
+# In[26]:
 
 
-if ttest_pvalue2 > 0.05:
+if test_bra_can.pvalue > 0.05:
     print('Com 95% de confiança, as médias das alturas de Brasil e Canada são estatisticamente iguais')
 else:
     print('Com 95% de confiança, as médias das alturas de Brasil e Canada NÃO são estatisticamente iguais')
 
 
-# In[56]:
+# In[106]:
 
+
+# Aplicação do teste ttest_ind, que compara dois grupos ( EUA e CANADA) para identificar semelhanças estatísticas 
+# Comparando o resultado com o alpha é possivel saber se a amostra tem uma semelhanças estatisticas
 
 sct.ttest_ind(height_usa, height_can, equal_var=False)
 
 
-# In[51]:
+# In[27]:
 
 
-ttest_stat3, ttest_pvalue3 = sct.ttest_ind(height_usa, height_can)
+test_usa_can = sct.ttest_ind(height_usa, height_can)
 
 
-# In[44]:
+# In[28]:
 
 
-if ttest_pvalue3 > 0.05:
+if test_usa_can.pvalue > 0.05:
     print('Com 95% de confiança, as médias das alturas de EUA e Canada são estatisticamente iguais')
 else:
     print('Com 95% de confiança, as médias das alturas de EUA e Canada NÃO são estatisticamente iguais')
 
 
-# In[45]:
+# In[29]:
 
 
-float(ttest_pvalue3.round(8))
+# Exibindo o p-valor do teste ttest_ind
 
-
-# In[49]:
-
-
-
-
-
-# In[ ]:
-
-
-
+float(test_usa_can.pvalue.round(8))
 
 
 # ## Questão 1
 # 
 # Considerando uma amostra de tamanho 3000 da coluna `height` obtida com a função `get_sample()`, execute o teste de normalidade de Shapiro-Wilk com a função `scipy.stats.shapiro()`. Podemos afirmar que as alturas são normalmente distribuídas com base nesse teste (ao nível de significância de 5%)? Responda com um boolean (`True` ou `False`).
 
-# In[6]:
+# In[110]:
 
 
 def q1():
@@ -395,7 +434,7 @@ def q1():
 # 
 # Repita o mesmo procedimento acima, mas agora utilizando o teste de normalidade de Jarque-Bera através da função `scipy.stats.jarque_bera()`. Agora podemos afirmar que as alturas são normalmente distribuídas (ao nível de significância de 5%)? Responda com um boolean (`True` ou `False`).
 
-# In[7]:
+# In[111]:
 
 
 def q2():
@@ -412,13 +451,13 @@ def q2():
 # 
 # Considerando agora uma amostra de tamanho 3000 da coluna `weight` obtida com a função `get_sample()`. Faça o teste de normalidade de D'Agostino-Pearson utilizando a função `scipy.stats.normaltest()`. Podemos afirmar que os pesos vêm de uma distribuição normal ao nível de significância de 5%? Responda com um boolean (`True` ou `False`).
 
-# In[8]:
+# In[30]:
 
 
 def q3():
     weight_3000 = get_sample(athletes, 'weight', n=3000, seed=42)
-    normal_stat, normal_pvalue = sct.normaltest(weight_3000)
-    return bool(normal_pvalue > 0.05)
+    normaltest_weight_3000 = sct.normaltest(weight_3000)
+    return bool(normaltest_weight_3000.pvalue > 0.05)
 
 
 # __Para refletir__:
@@ -430,14 +469,14 @@ def q3():
 # 
 # Realize uma transformação logarítmica em na amostra de `weight` da questão 3 e repita o mesmo procedimento. Podemos afirmar a normalidade da variável transformada ao nível de significância de 5%? Responda com um boolean (`True` ou `False`).
 
-# In[9]:
+# In[113]:
 
 
 def q4():
     weight_3000 = get_sample(athletes, 'weight', n=3000, seed=42)
     weight_3000_log = np.log(weight_3000)
-    normal_stat_log, normal_pvalue_log = sct.normaltest(weight_3000_log)
-    return bool(normal_pvalue_log > 0.05)
+    normaltest_weight_3000_log = sct.normaltest(weight_3000_log)
+    return bool(normaltest_weight_3000_log.pvalue > 0.05)
 
 
 # __Para refletir__:
@@ -451,42 +490,42 @@ def q4():
 # 
 # Obtenha todos atletas brasileiros, norte-americanos e canadenses em `DataFrame`s chamados `bra`, `usa` e `can`,respectivamente. Realize um teste de hipóteses para comparação das médias das alturas (`height`) para amostras independentes e variâncias diferentes com a função `scipy.stats.ttest_ind()` entre `bra` e `usa`. Podemos afirmar que as médias são estatisticamente iguais? Responda com um boolean (`True` ou `False`).
 
-# In[10]:
+# In[31]:
 
 
 def q5():
     height_bra = athletes.query('nationality in "BRA"')['height'].dropna()
     height_usa = athletes.query('nationality in "USA"')['height'].dropna()
-    ttest_stat1, ttest_pvalue1 = sct.ttest_ind(height_bra, height_usa, equal_var=False)
-    return bool(ttest_pvalue1 > 0.05)
+    test_bra_usa = sct.ttest_ind(height_bra, height_usa, equal_var=False)
+    return bool(test_bra_usa.pvalue > 0.05)
 
 
 # ## Questão 6
 # 
 # Repita o procedimento da questão 5, mas agora entre as alturas de `bra` e `can`. Podemos afimar agora que as médias são estatisticamente iguais? Reponda com um boolean (`True` ou `False`).
 
-# In[11]:
+# In[32]:
 
 
 def q6():
     height_bra = athletes.query('nationality in "BRA"')['height'].dropna()
     height_can = athletes.query('nationality in "CAN"')['height'].dropna()
-    ttest_stat2, ttest_pvalue2 = sct.ttest_ind(height_bra, height_can, equal_var=False)
-    return bool(ttest_pvalue2 > 0.05)
+    test_bra_can = sct.ttest_ind(height_bra, height_can, equal_var=False)
+    return bool(test_bra_can.pvalue > 0.05)
 
 
 # ## Questão 7
 # 
 # Repita o procedimento da questão 6, mas agora entre as alturas de `usa` e `can`. Qual o valor do p-valor retornado? Responda como um único escalar arredondado para oito casas decimais.
 
-# In[12]:
+# In[33]:
 
 
 def q7():
     height_can = athletes.query('nationality in "CAN"')['height'].dropna()
     height_usa = athletes.query('nationality in "USA"')['height'].dropna()
-    ttest_stat3, ttest_pvalue3 = sct.ttest_ind(height_usa, height_can, equal_var=False)
-    return float(ttest_pvalue3.round(8))
+    test_usa_can = sct.ttest_ind(height_usa, height_can, equal_var=False)
+    return float(test_usa_can.pvalue.round(8))
 
 
 # __Para refletir__:
@@ -494,3 +533,9 @@ def q7():
 # * O resultado faz sentido?
 # * Você consegue interpretar esse p-valor?
 # * Você consegue chegar a esse valor de p-valor a partir da variável de estatística?
+
+# In[ ]:
+
+
+
+
